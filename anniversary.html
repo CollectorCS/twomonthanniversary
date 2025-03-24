@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anniversary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merienda&display=swap" rel="stylesheet">
+    <style>
+	body {
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    height: 100vh;
+	    background-color: black;
+	    font-family: 'Merienda', cursive;
+	    padding: 20px;
+	}
+	
+	canvas {
+	    position: fixed;
+	    top: 0;
+	    left: 0;
+	    width: 100vw;
+	    height: 100vh;
+	    z-index: -1;
+	}
+
+	h2 {
+	    font-size: 2em;
+	    color: #d62828;
+	    margin-bottom: 15px;
+	}
+
+	.letter-container {
+	    width: 90%;
+	    max-width: 600px;
+	    background: #0b3d91;
+	    padding: 20px;
+	    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+	    border-radius: 10px;
+	    text-align: left;
+	    font-size: 1em;
+	    line-height: 1.6;
+	    border-left: 5px solid #131862;
+	    position: relative;
+	    z-index: 1;
+	}
+
+	#love-letter {
+	    white-space: pre-wrap;
+	    overflow: hidden;
+	    min-height: 8em;
+	    display: block;
+	}
+
+	#start-btn {
+	    background: #0B1026;
+	    color: white;
+	    font-size: 1.2em;
+	    border: none;
+	    padding: 10px 20px;
+	    border-radius: 5px;
+	    cursor: pointer;
+	    margin-top: 15px;
+	    font-family: 'Merienda', cursive;
+	    display: block;
+	    margin: 0 auto;
+	}
+
+	#start-btn:hover {
+	    background: #131862;
+	}
+
+	.button-container {
+	    text-align: center;
+	}
+
+	#redirect-btn {
+	    position: fixed;
+	    top: 20px;
+	    right: 20px;
+	    background: black;
+	    color: white;
+	    font-size: 1.2em;
+	    border: none;
+	    padding: 10px 20px;
+	    border-radius: 5px;
+	    cursor: pointer;
+	}
+
+	#redirect-btn:hover {
+	    background: #131862;
+	}
+    </style>
+</head>
+<body>
+    <canvas id="stars"></canvas>
+    <canvas id="fireworks"></canvas>
+
+    <div class="letter-container">
+	<div class="button-container">
+    	   <button id="start-btn">Read This</button>
+    	</div>
+	<p id="love-letter"></p>
+    </div>
+
+    <button id="redirect-btn">Click Me!</button>
+
+    <audio id="bg-music" loop>
+	<source src="let.the.world.burn.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+
+	document.getElementById("redirect-btn").addEventListener("click", function () {
+	    window.location.href = "test.html";
+
+	});
+
+	function startStars() {
+	    const canvas = document.getElementById("stars");
+	    const ctx = canvas.getContext("2d");
+	    canvas.width = window.innerWidth;
+	    canvas.height = window.innerHeight;
+
+	    let stars = [];
+
+	    function Star() {
+		this.x = Math.random() * canvas.width;
+		this.y = Math.random() * canvas.height;
+		this.alpha = Math.random();
+		this.fade = Math.random() * 0.02 + 0.005;
+		this.size = Math.random() * 3;
+	    }
+	
+	    function createStars(count) {
+		for (let i = 0; i < count; i++) {
+		   stars.push(new Star());
+		}
+	    }
+
+	    function animateStars() {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+		stars.forEach(star => {
+		   star.alpha += star.fade;
+		   if (star.alpha >= 1 || star.alpha <= 0) {
+			star.fade *= -1;
+		   }
+
+		   ctx.globalAlpha = star.alpha;
+		   ctx.fillStyle = "white";
+		   ctx.beginPath();
+		   ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+		   ctx.fill();
+		});
+
+		requestAnimationFrame(animateStars);
+	    }
+	
+	    createStars(100);
+	    animateStars();
+	}
+	
+	startStars();
+
+	document.getElementById("start-btn").addEventListener("click", function () {
+	    const text =`Happy Anniversary Skylar!\n
+		     In the depth of green, your eyes softly shine,\n
+		     A spark that mirrors the stars, divine.\n
+		     With glasses perched on your gentle face,\n
+		     You light up the room with unmatched grace.\n\n
+		     Your hair, like autumn's soft embrace,\n
+		     Frames a smile that time can't erase.\n
+		     You walk through books, a librarian's heart,\n
+		     With wisdom vast, a work of art.\n\n
+		     In labs and lectures, you shine so bright,\n
+		     Chemistry and physics, your endless light.\n
+		     But when you speak of stars that glow,\n
+		     I see in you a universe i know.\n\n
+		     Together, we've danced through days so sweet,\n
+		     Each moment a rhythm, each heartbeat complete.\n
+		     Two months together, yet it feels so much more,\n
+		     As if our souls have met before.\n\n
+		     So take my hand, let's write the days,\n
+		     In constellations, love-filled phrase.\n
+		     Not just months, but years to be,\n
+		     My future rests with you and me.\n\n
+		     Forever yours,\n
+		     Collector.`;
+
+	let index = 0;
+	const speed = 50;
+	const letterElement = document.getElementById("love-letter");
+	const button = document.getElementById("start-btn");
+	const music = document.getElementById("bg-music");
+
+	button.style.display = "none";
+	letterElement.innerHTML = "";
+
+	music.play().catch(error => console.log("Autoplay blocked:", error));
+	
+	function typewriter() {
+	    if (index < text.length) {
+		letterElement.innerHTML += text.charAt(index);
+		index++;
+		setTimeout(typewriter, speed);
+
+	    }
+	}
+
+	typewriter();
+	startFireworks();
+
+     });
+
+     function startFireworks() {
+	const canvas = document.getElementById("fireworks");
+	const ctx = canvas.getContext("2d");
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	
+	let fireworks = [];
+
+	function Firework(x, y) {
+	    this.x = x;
+	    this.y = y;
+	    this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+	    this.particles = [];
+
+	    for (let i = 0; i < 50; i++) {
+		this.particles.push({
+		   x: this.x,
+		   y: this.y,
+		   speed: Math.random() * 4 + 2,
+		   angle: Math.random() * 2 * Math.PI,
+		   alpha: 1
+		});
+	    }
+	}
+
+	Firework.prototype.update = function () {
+	    this.particles.forEach(p => {
+		p.x += Math.cos(p.angle) * p.speed;
+		p.y += Math.sin(p.angle) * p.speed;
+		p.alpha -= 0.005;
+	    });
+
+	};
+	
+	Firework.prototype.draw = function () {
+	    this.particles.forEach(p => {
+		ctx.fillStyle = this.color;
+		ctx.globalAlpha = p.alpha;
+		ctx.beginPath();
+		ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+		ctx.fill();
+	    });
+	    ctx.globalAlpha = 1;
+	};
+	
+	function createFirework() { 
+	    fireworks.push(new Firework(Math.random() * canvas.width, Math.random() * canvas.height));
+	}
+
+	function animateFireworks() {
+	    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	    fireworks.forEach((f, index) => {
+		f.update();
+		f.draw();
+
+		if (f.particles.every(p => p.alpha <= 0)) {
+		   fireworks.splice(index, 1);
+		}
+	    });
+	    requestAnimationFrame(animateFireworks);
+	}
+	
+	setInterval(createFirework, 1000);
+	animateFireworks();
+     }
+    </script>
+</body>
+</html>
