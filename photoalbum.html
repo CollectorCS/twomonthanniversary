@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us <3</title>
+    <style>
+	body {
+	    margin: 0;
+	    padding: 0;
+	    background-color: #131862;
+	    color: white;
+	    font-family: 'Merienda', cursive;
+	    text-align: center;
+	    overflow-x: hidden;
+	}
+
+	h1 {
+	    margin-top: 20px;
+	    font-size: 2.5em;
+	    color: #ff6b6b;
+	}
+
+	.gallery-container {
+	    display: grid;
+	    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	    gap: 15px;
+	    padding: 20px;
+	    width: 80%;
+	    margin: auto;
+	}
+
+	.gallery-container img {
+	    width: 100%;
+	    height: 200px;
+	    object-fit: cover;
+	    border-radius: 10px;
+	    cursor: pointer;
+	    transition: transform 0.3s;
+	}
+
+	.gallery-container img:hover {
+	    transform: scale(1.1);
+	}
+
+	.lightbox {
+	    display: none;
+	    position: fixed;
+	    top: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 100%;
+	    background: rgba(0, 0, 0, 0.8);
+	    justify-content: center;
+	    align-items: center;
+	    text-align: center;
+	    z-index: 1000;
+	}
+
+	.lightbox img {
+	    max-width: 90%;
+	    max-height: 80%;
+	    border-radius: 10px;
+	}
+
+	.close {
+	    position: absolute;
+	    top: 20px;
+	    right: 40px;
+	    font-size: 2em;
+	    color: white;
+	    cursor: pointer;
+	}
+
+	.prev, .next {
+	    position: absolute;
+	    top: 50%;
+	    transform: translateY(-50%);
+	    font-size: 40px;
+	    background: none;
+	    border: none;
+	    color: white;
+	    cursor: pointer;
+	}
+
+	.prev {
+	    left: 20px;
+	}
+
+	.next {
+	    right: 20px;
+	}
+
+	.back-btn {
+	    display: inline-block;
+	    padding: 12px 25px;
+	    background: #0B1026;
+	    color: white;
+	    font-size: 1.2em;
+	    text-decoration: none;
+	    border-radius: 5px;
+	    margin-top: 30px;
+	    transition: background 0.3s;
+	}
+
+	.back-btn:hover {
+	    background: #161B36;
+	}
+
+	.music-button {
+	    position: fixed;
+	    bottom: 20px;
+	    right: 20px;
+	    background-color: #35475F;
+	    color: white;
+	    border: none;
+	    padding: 10px 15px;
+	    font-size: 1.2em;
+	    cursor: pointer;
+	    border-radius: 50%;
+	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	    transition: background-color 0.3s;
+	}
+
+	.music-button:hover {
+	    background-color: #131862
+	}
+
+	.music-button:active {
+	    background-color: #131862;
+	}
+
+
+
+	canvas {
+	    position: fixed;
+	    top: 0;
+	    left: 0;
+	    width: 100vw;
+	    height: 100vh;
+	    z-index: -1;
+	}
+    </style>
+</head>
+<body>
+
+    <h1>Our Moments Together</h1>
+
+    <div class="gallery-container">
+	<img src="C:\Users\colle\OneDrive\Documents\websitesforwifeybciminlovefr/gorilla.jpg" alt="Memory 1" onclick="openLightbox(this)">
+	<img src="C:\Users\colle\OneDrive\Documents\websitesforwifeybciminlovefr/response.jpg" alt="Memory 2" onclick="openLightbox(this)">
+	<img src="C:\Users\colle\OneDrive\Documents\websitesforwifeybciminlovefr/gentle.jpg" alt="Memory 3" onclick="openLightbox(this)">
+	<img src="C:\Users\colle\OneDrive\Documents\websitesforwifeybciminlovefr/random.jpg" alt="Memory 4" onclick="openLightbox(this)">
+	<img src="C:\Users\colle\OneDrive\Documents\websitesforwifeybciminlovefr/morning.jpg" alt="Memory 5" onclick="openLightbox(this)">
+	<img src="C:\Users\colle\OneDrive\Documents\websitesforwifeybciminlovefr/thatswhatshesaid.jpg" alt="Memory 6" onclick="openLightbox(this)">
+	<img src="C:\Users\colle\OneDrive\Documents\websitesforwifeybciminlovefr/marijuana.jpg" alt="Memory 7" onclick="openLightbox(this)">
+	<img src="C:\Users\colle\OneDrive\Documents\websitesforwifeybciminlovefr/snuggle.jpg" alt="Memory 8" onclick="openLightbox(this)">
+	<img src="C:\Users\colle\OneDrive\Documents\websitesforwifeybciminlovefr/glassesdrawing.jpg" alt="Memory 9" onclick="openLightbox(this)">
+	<img src="C:\Users\colle\OneDrive\Documents\websitesforwifeybciminlovefr/snazzy.jpg" alt="Memory 10" onclick="openLightbox(this)">
+    </div>
+
+    <div class="lightbox" id="lightbox">
+	<span class="close" onclick="closeLightbox()">&times;</span>
+	<img id="lightbox-img" src="" alt="">
+	<button class="prev" onclick="changeImage(-1)">&#10094;</button>
+	<button class="next" onclick="changeImage(1)">&#10095;</button>
+    </div>
+
+    <button class="music-button" id="musicButton" aria-label="Toggle music">🎶</button>
+
+    <a href="test.html" class="back-btn">Back</a>
+
+    <canvas id="stars"></canvas>
+
+    <audio id="backgroundMusic" loop>
+	<source src="ruler-of-my-heart.mp3" type="audio/mp3">
+	Your browser does not support the audio element.
+    </audio>
+
+    <script>
+	let currentImageIndex = 0;
+	const images = Array.from(document.querySelectorAll(".gallery-container img"));
+
+	function openLightbox(imgElement) {
+	    const lightbox = document.getElementById("lightbox");
+	    const lightboxImg = document.getElementById("lightbox-img");
+	    lightboxImg.src = imgElement.src;
+	    lightbox.style.display = "flex";
+	}
+
+	function closeLightbox() {
+	    document.getElementById("lightbox").style.display = "none";
+	}
+
+	function changeImage(direction) {
+	    currentImageIndex += direction;
+	    if (currentImageIndex < 0) {
+		currentImageIndex = images.length - 1;
+	    } else if (currentImageIndex >= images.length) {
+		currentImageIndex = 0;
+	    }
+	    document.getElementById("lightbox-img").src = images[currentImageIndex].src;
+	}
+
+	const canvas = document.getElementById("stars");
+	const ctx = canvas.getContext("2d");
+	
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+
+	function Star(x, y, radius, speed) {
+	    this.x = x;
+	    this.y = y;
+	    this.radius = radius;
+	    this.speed = speed;
+	    this.alpha = Math.random() * 0.5 + 0.5;
+	}
+
+	Star.prototype.update = function () {
+	    this.y += this.speed;
+	    if (this.y > canvas.height) {
+		this.y = 0;
+		this.x = Math.random() * canvas.width;
+	    }
+	};
+
+	Star.prototype.draw = function () {
+	    ctx.beginPath();
+	    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+	    ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+	    ctx.fill();
+	};
+
+	let stars = [];
+
+	function createStars() {
+	    for (let i = 0; i < 150; i++) {
+		const radius = Math.random() * 2 + 1;
+		const x = Math.random() * canvas.width;
+		const y = Math.random() * canvas.height;
+		const speed = Math.random() * 0.3 + 0.1;
+		stars.push(new Star(x, y, radius, speed));
+	    }
+	}
+
+	function animateStars() {
+	    ctx.clearRect(0, 0, canvas.width, canvas.height);
+	    stars.forEach(star => {
+		star.update();
+		star.draw();
+	    });
+	    requestAnimationFrame(animateStars);
+	}
+
+	createStars();
+	animateStars();
+
+	const musicButton = document.getElementById("musicButton");
+	const backgroundMusic = document.getElementById("backgroundMusic");
+	
+	let isMusicPlaying = false;
+
+	musicButton.addEventListener("click", function() {
+	    if (isMusicPlaying) {
+		backgroundMusic.pause();
+		isMusicPlaying = false;
+	    } else {
+		backgroundMusic.play();
+		isMusicPlaying = true;
+	    }
+	});
+
+    </script>
+</body>
+</html>

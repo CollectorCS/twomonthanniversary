@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Jar</title>
+    <style>
+	@import url('https://fonts.googleapis.com/css2?family=Merienda&display=swap');
+	
+	body {
+	    font-family: 'Merienda', cursive;
+	    background: #131862;
+	    color: white;
+	    text-align: center;
+	    padding: 20px;
+	}
+
+	h1 {
+	    font-size: 2.5em;
+	    color: #ff6b6b;
+	}
+
+	.jar-container {
+	    background: rgba(255, 255, 255, 0.1);
+	    padding: 20px;
+	    border-radius: 10px;
+	    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+	    width: 90%;
+	    max-width: 500px;
+	    margin: auto;
+	}
+
+
+	.note-display {
+	    font-size: 1.5em;
+	    margin-top: 20px;
+	    padding: 15px;
+	    background: rgba(255, 255, 255, 0.2);
+	    border-radius: 10px;
+	    font-style: italic;
+	}
+
+	.all-notes {
+	    display: none;
+	    margin-top: 20px;
+	    text-align: left;
+	    max-height: 200px;
+	    overflow-y: auto;
+	    padding: 10px;
+	    background: rgba(255, 255, 255, 0.2);
+	    border-radius: 10px;
+	}
+
+	.all-notes p {
+	    background: rgba(255, 255, 255, 0.2);
+	    padding: 10px;
+	    border-radius: 5px;
+	    margin: 5px 0;
+	}
+
+	button {
+	    background: #0B1026;
+	    color: white;
+	    border: none;
+	    padding: 5px 20px;
+	    font-size: 1.2em;
+	    border-radius: 5px;
+	    cursor: pointer;
+	    margin-top;
+	}
+
+	button:hover {
+	    background: #161B36;
+	}
+
+	canvas {
+	    position: fixed;
+	    top: 0;
+	    left: 0;
+	    width: 100vw;
+	    height: 100vh;
+	    z-index: -1;
+	}
+
+	#kitty {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        #kitty-text {
+            position: fixed;
+            bottom: 5px; /* Adjust the position closer to the image */
+            right: 35px;
+            color: white;
+            font-size: 1.2em;
+            font-style: italic;
+            z-index: 101;
+        }
+
+	.music-button {
+	    position: fixed;
+	    bottom: 20px;
+	    left: 20px;
+	    background-color: #35475F;
+	    color: white;
+	    border: none;
+	    padding: 10px 15px;
+	    font-size: 1.2em;
+	    cursor: pointer;
+	    border-radius: 50%;
+	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	    transition: background-color 0.3s;
+	}
+
+	.music-button:hover {
+	    background-color: #131862
+	}
+
+	.music-button:active {
+	    background-color: #131862;
+	}
+
+	.back-btn {
+	    display: inline-block;
+	    padding: 12px 25px;
+	    background: #0B1026;
+	    color: white;
+	    font-size: 1.2em;
+	    text-decoration: none;
+	    border-radius: 5px;
+	    margin-top: 30px;
+	    transition: background 0.3s;
+	}
+
+	.back-btn:hover {
+	    background: #161B36;
+	}
+
+
+    </style>
+</head>
+<body>
+
+    <h1>Our Love Jar</h1>
+
+    <div class="jar-container">
+	<p>Every time you open this jay, a new message from my heart appears just for you <3</p>
+	<div class="note-display" id="random-note"></div>
+	<button onclick="showAllNotes()">See All Notes</button>
+	<div class="all-notes" id="all-notes"></div>
+    </div>
+
+    <button class="music-button" id="musicButton" aria-label="Toggle music">🎶</button>
+
+    <img id="kitty" src="kittyy.png" alt="Kitty" onclick="meow()">
+
+    <div id="kitty-text">us btw</div>
+
+    <audio id="meow-sound" src="meow.mp3"></audio>
+
+    <a href="test.html" class="back-btn">Back</a>
+
+    <canvas id="stars"></canvas>
+
+    <audio id="backgroundMusic" loop>
+	<source src="megane-go-round.mp3" type="audio/mp3">
+	Your browser does not support the audio element.
+    </audio>
+
+    <script>
+	const loveNotes = [
+	    "Your eyes are the prettiest emeralds to exist.",
+	    "I'm crazy in love with you",
+	    "I'm sure you look adorable in that lab coat X3",
+	    "Your glasses are like a frame to a painting.",
+	    "Forever isn't long enough to spend with you.",
+	    "No words can express how much you mean to me. (so i made this ^^(it's still not enough))",
+	    "Everytime I see a picture of you my heart flutters faster than the butterflies and birds that surround Fluttershy.",
+	    "You'll always be my little Einstein.",
+	    "I can't wait to marry you.",
+	    "We're getting a cat.",
+	    "I love your voice sm.",
+	    "You look huggable rn (I'm in your closet)",
+	    "Did I mention we're getting a cat?"
+	];
+
+	function getRandomNote() {
+	    const randomIndex = Math.floor(Math.random() * loveNotes.length);
+	    document.getElementById("random-note").innerText = loveNotes[randomIndex];
+	}
+
+	function showAllNotes() {
+	    const allNotesContainer = document.getElementById("all-notes");
+	    if (allNotesContainer.style.display === "none" || allNotesContainer.style.display === "") {
+		allNotesContainer.innerHTML = loveNotes.map(note => `<p>${note}</p>`).join('');
+		allNotesContainer.style.display = "block";
+	    } else {
+		allNotesContainer.style.display = "none";
+	    }
+	}
+
+	getRandomNote();
+
+	const canvas = document.getElementById("stars");
+	const ctx = canvas.getContext("2d");
+	
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	
+	function Star(x, y, radius, speed) {
+	    this.x = x;
+	    this.y = y;
+	    this.radius = radius;
+	    this.speed = speed;
+	    this.alpha = Math.random() * 0.5 + 0.5;
+	}
+
+	Star.prototype.update = function () {
+	    this.y += this.speed;
+	    if (this.y > canvas.height) {
+		this.y = 0;
+		this.x = Math.random() * canvas.width;
+	    }
+	};
+
+	Star.prototype.draw = function () {
+	    ctx.beginPath();
+	    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+	    ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+	    ctx.fill();
+	};
+
+	let stars = [];
+
+	function createStars() {
+	    for (let i = 0; i < 200; i++) {
+		const radius = Math.random() * 2 + 1;
+		const x = Math.random() * canvas.width;
+		const y = Math.random() * canvas.height;
+		const speed = Math.random() * 0.5 + 0.1;
+		
+		stars.push(new Star(x, y, radius, speed));
+	    }
+	}
+
+	function animateStars() {
+	    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	    stars.forEach(star => {
+		star.update();
+		star.draw();
+	    });
+	    
+	    requestAnimationFrame(animateStars);
+	}
+
+	createStars();
+	animateStars();
+
+        function meow() {
+            const meowSound = document.getElementById("meow-sound");
+            meowSound.play();
+        }
+
+	const musicButton = document.getElementById("musicButton");
+	const backgroundMusic = document.getElementById("backgroundMusic");
+	
+	let isMusicPlaying = false;
+
+	musicButton.addEventListener("click", function() {
+	    if (isMusicPlaying) {
+		backgroundMusic.pause();
+		isMusicPlaying = false;
+	    } else {
+		backgroundMusic.play();
+		isMusicPlaying = true;
+	    }
+	});
+
+
+    </script>
+
+</body>
+</html>

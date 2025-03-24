@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Merienda', cursive;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            background: #131862;
+            color: white;
+        }
+
+	h1 {
+	    font-size: 3em;
+	    color: #ff6b6b;
+	    margin-top: 20px;
+	}
+
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .player-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .progress {
+            width: 0;
+            height: 100%;
+            background: #bea9de;
+        }
+
+        button {
+            background: #0B1026;
+            color: white;
+            font-size: 1.2em;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #161B36;
+        }
+
+	.back-btn {
+	    display: inline-block;
+	    padding: 12px 25px;
+	    background: #0B1026;
+	    color: white;
+	    font-size: 1.2em;
+	    text-decoration: none;
+	    border-radius: 5px;
+	    margin-top: 30px;
+	    transition: background 0.3s;
+	}
+
+	.back-btn:hover {
+	    background: #161B36;
+	}
+
+    </style>
+</head>
+<body>
+
+    <canvas id="stars"></canvas>
+    <h1>Our Playlist <3</h1>
+
+    <div class="player-container">
+        <p id="current-song">Now Playing: Click a song below!</p>
+        <div class="controls">
+            <button id="prev">⏮️</button>
+            <button id="play-pause">▶️</button>
+            <button id="next">⏭️</button>
+            <button id="mode">▶️</button>
+        </div>
+        <div class="progress-bar" id="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="song-list">
+            <button onclick="playSong(0)">Ruler Of My Heart</button>
+            <button onclick="playSong(1)">Heavy Love</button>
+            <button onclick="playSong(2)">Dont Look At It</button>
+            <button onclick="playSong(3)">Moonlight Magic</button>
+        </div>
+        <div class="song-list">
+            <button onclick="playSong(4)">HEXXED HER LOVE <3 xoxo</button>
+            <button onclick="playSong(5)">Vacation Bible School</button>
+            <button onclick="playSong(6)">Until I Found You</button>
+            <button onclick="playSong(7)">Love Me</button>
+        </div>
+	<div class="song-list">
+	    <button onclick="playSong(8)">I Was Made For Lovin You</button>
+	    <button onclick="playSong(9)">SHE IS CRAZY BUT, I <3 HER!</button>
+	    <button onclick="playSong(10)">ME N U DATE</button>
+	    <button onclick="playSong(11)">DESIRE</button>
+	</div>
+	<div class="song-list">
+	    <button onclick="playSong(12)">Possession Of A Weapon</button>
+	    <button onclick="playSong(13)">Want It All</button>
+	    <button onclick="playSong(14)">ICE SPICE HMU</button>
+	    <button onclick="playSong(15)">B.B.B.F.F</button>
+	</div>
+
+	<div class="song-list">
+	    <button onclick="playSong(16)">anxiety</button>
+	    <button onclick="playSong(17)">Sweet</button>
+	    <button onclick="playSong(18)">WILL U BE MINE</button>
+	    <button onclick="playSong(19)">COLDEST WINTER</button>
+	</div>
+
+	<div class="song-list">
+	    <button onclick="playSong(20)">Super Soaker</button>
+	    <button onclick="playSong(21)">Little Sister</button>
+	    <button onclick="playSong(22)">LET THE WORLD BURN</button>
+	    <button onclick="playSong(23)">Let Me Out</button>
+	</div>
+
+	<div class="song-list">
+	    <button onclick="playSong(24)">Stay With Me</button>
+	    <button onclick="playSong(25)">Got The Time</button>
+	    <button onclick="playSong(26)">Foxey Lady</button>
+	    <button onclick="playSong(27)">Voodoo Child</button>
+	</div>
+
+	<div class="song-list">
+	    <button onclick="playSong(28)">Sunshine Of Your Love</button>
+	    <button onclick="playSong(29)">A Tout Le Monde</button>
+	    <button onclick="playSong(30)">Should I</button>
+	    <button onclick="playSong(31)">Cherub Rock</button>
+	</div>
+
+    </div>
+
+    <a href="test.html" class="back-btn">Back</a>
+
+    <audio id="audio-player"></audio>
+
+    <script>
+        const audioPlayer = document.getElementById("audio-player");
+        const currentSongText = document.getElementById("current-song");
+        const playPauseButton = document.getElementById("play-pause");
+        const progressBar = document.getElementById("progress-bar");
+        const progress = document.getElementById("progress");
+        const prevButton = document.getElementById("prev");
+        const nextButton = document.getElementById("next");
+        const modeButton = document.getElementById("mode");
+
+        let songs = [
+            { file: 'ruler-of-my-heart.mp3', title: 'Ruler Of My Heart' },
+            { file: 'heavy-love.mp3', title: 'Heavy Love' },
+            { file: 'dont-look-at-it.mp3', title: 'Dont Look At It' },
+            { file: 'moonlight-magic.mp3', title: 'Moonlight Magic' },
+            { file: 'hexxed-her-love.mp3', title: 'HEXXED HER LOVE <3 xoxo' },
+            { file: 'vacation-bible-school.mp3', title: 'Vacation Bible School' },
+            { file: 'untiil-i-found-you.mp3', title: 'Until I Found You' },
+            { file: 'love-me.mp3', title: 'Love Me' },
+	    { file: 'i-was-made-for-lovin-you.mp3', title: 'I Was Made For Lovin You' },
+	    { file: 'she-is-crazy.mp3', title: 'SHE IS CRAZY BUT, I <3 HER!' },
+	    { file: 'me-n-u-date.mp3', title: 'ME N U DATE' },
+	    { file: 'desire.mp3', title: 'DESIRE' },
+	    { file: 'possession-of-a-weapon.mp3', title: 'Possession Of A Weapon' },
+	    { file: 'want-it-all.mp3', title: 'Want It All' },
+	    { file: 'ice-spice-hmu.mp3', title: 'ICE SPICE HMU' },
+	    { file: 'bbbff.mp3', title: 'B.B.B.F.F' },
+	    { file: 'anxiety.mp3', title: 'anxiety' },
+	    { file: 'sweet.mp3', title: 'Sweet' },
+	    { file: 'will-u-be-mine.mp3', title: 'WILL U BE MINE' },
+	    { file: 'coldest-winter.mp3', title: 'COLDEST WINTER' },
+	    { file: 'super-soaker.mp3', title: 'Super Soaker' },
+	    { file: 'little-sister.mp3', title: 'Little Sister' },
+	    { file: 'let.the.world.burn.mp3', title: 'LET THE WORLD BURN' },
+	    { file: 'let-me-out.mp3', title: 'Let Me Out' },
+	    { file: 'stay-with-me.mp3', title: 'Stay With Me' },
+	    { file: 'got-the-time.mp3', title: 'Got The Time' },
+	    { file: 'foxey-lady.mp3', title: 'Foxey Lady' },
+	    { file: 'voodoo-child.mp3', title: 'Voodoo Child' },
+	    { file: 'sunshine-of-your-love.mp3', title: 'Sunshine Of Your Love' },
+	    { file: 'a-tout-le-monde.mp3', title: 'A Tout Le Monde' },
+	    { file: 'should-i.mp3', title: 'Should I' },
+	    { file: 'cherub-rock.mp3', title: 'Cherub Rock' }
+
+        ];
+        
+        let currentSongIndex = 0;
+        let mode = 0; // 0: Play in Order, 1: Loop Song, 2: Loop Playlist, 3: Shuffle
+        const modes = ['Order', 'Loop 1', 'Loop All', 'Shuffle'];
+
+        function playSong(index) {
+            currentSongIndex = index;
+            audioPlayer.src = songs[index].file;
+            audioPlayer.play();
+            currentSongText.textContent = "Now Playing: " + songs[index].title;
+            playPauseButton.textContent = "⏸️";
+        }
+
+        playPauseButton.addEventListener("click", () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playPauseButton.textContent = "⏸️";
+            } else {
+                audioPlayer.pause();
+                playPauseButton.textContent = "▶️";
+            }
+        });
+
+        audioPlayer.addEventListener("ended", () => {
+            if (mode === 1) {
+                playSong(currentSongIndex);
+            } else if (mode === 2) {
+                playSong((currentSongIndex + 1) % songs.length);
+            } else if (mode === 3) {
+                playSong(Math.floor(Math.random() * songs.length));
+            } else if (currentSongIndex < songs.length - 1) {
+                playSong(currentSongIndex + 1);
+            }
+        });
+
+        prevButton.addEventListener("click", () => {
+            if (currentSongIndex > 0) {
+                playSong(currentSongIndex - 1);
+            }
+        });
+
+        nextButton.addEventListener("click", () => {
+            if (currentSongIndex < songs.length - 1) {
+                playSong(currentSongIndex + 1);
+            }
+        });
+
+        modeButton.addEventListener("click", () => {
+            mode = (mode + 1) % 4;
+            modeButton.textContent = modes[mode];
+        });
+
+	audioPlayer.addEventListener("timeupdate", () => {
+	    if (audioPlayer.duration > 0) {
+		const progressPercentage = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+		progress.style.width = progressPercentage + "%";
+	    }
+	});
+
+	progressBar.addEventListener("click", (e) => {
+	    const rect = progressBar.getBoundingClientRect();
+	    const clickPosition = e.clientX - rect.left;
+	    const progressPercentage = clickPosition / progressBar.offsetWidth;
+	    audioPlayer.currentTime = progressPercentage * audioPlayer.duration;
+	});
+
+
+	const canvas = document.getElementById("stars");
+	const ctx = canvas.getContext("2d");
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	
+	let stars = []
+	for (let i = 0; i < 200; i++) {
+	    stars.push({
+		x: Math.random() * canvas.width,
+		y: Math.random() * canvas.height,
+		radius: Math.random() * 2,
+		opacity: Math.random(),
+		speed: Math.random() * 0.5
+	    });
+	}
+	
+	function animateStars() {
+	    ctx.clearRect(0, 0, canvas.width, canvas.height);
+	    stars.forEach(star => {
+		ctx.globalAlpha = star.opacity
+		ctx.fillStyle = "white";
+		ctx.beginPath();
+		ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+		ctx.fill()
+		star.y += star.speed;
+		if (star.y > canvas.height) star.y = 0;
+	    });
+	    requestAnimationFrame(animateStars);
+	}
+	animateStars();
+
+    </script>
+</body>
+</html>

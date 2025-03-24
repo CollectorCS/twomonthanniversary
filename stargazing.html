@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stars</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Merienda', cursive;
+            text-align: center;
+            color: white;
+            background: radial-gradient(#131862, #000814);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            animation: twinkle 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.6; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.3); }
+        }
+
+        .message-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            font-size: 1em;
+            position: absolute;
+            display: none;
+            color: black;
+            transition: opacity 0.7s ease-in-out;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #0B1026;
+            color: white;
+            font-size: 1em;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+	    z-index: 10;
+        }
+
+        .back-btn:hover {
+            background: #161B36;
+        }
+
+        .instruction-message {
+            position: absolute;
+            top: 30px;
+            width: 100%;
+            text-align: center;
+            font-size: 2em;
+            color: #ff6b6b;
+            opacity: 0.8;
+        }
+
+	.music-button {
+	    position: fixed;
+	    bottom: 20px;
+	    left: 20px;
+	    background-color: #35475F;
+	    color: white;
+	    border: none;
+	    padding: 10px 15px;
+	    font-size: 1.2em;
+	    cursor: pointer;
+	    border-radius: 50%;
+	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	    transition: background-color 0.3s;
+	    z-index: 10;
+	}
+
+	.music-button:hover {
+	    background-color: #131862
+	}
+
+	.music-button:active {
+	    background-color: #131862;
+	}
+
+    </style>
+</head>
+<body>
+
+    <a href="test.html" class="back-btn">Back</a>
+
+    <div class="instruction-message">Click One Of The Stars <3</div>
+
+    <button class="music-button" id="musicButton" aria-label="Toggle music">🎶</button>
+
+    <div id="messageBox" class="message-box"></div>
+
+    <audio id="backgroundMusic" loop>
+	<source src="possession-of-a-weapon.mp3" type="audio/mp3">
+	Your browser does not support the audio element.
+    </audio>
+
+
+    <script>
+        const numStars = 70;
+        const messages = [
+	    "You're the sun that shines the brightest.",
+	    "I love you to the end of the universe and back.",
+	    "Our love is written in the stars, it was meant to be.",
+	    "Can we please get a cat though?",
+	    "I cant wait to marry you, Im sure the stars will dance in our celebration.",
+	    "With you every moment sparkles. ...sparkle? Twilight Sparkle????",
+	    "Your love's moonlight lights up the dark void inside my heart.",
+	    "You're my North Star."
+        ];
+
+        function createStars() {
+            for (let i = 0; i < numStars; i++) {
+                let star = document.createElement("div");
+                star.classList.add("star");
+
+                // Random position
+                let x = Math.random() * window.innerWidth;
+                let y = Math.random() * window.innerHeight;
+
+                star.style.left = `${x}px`;
+                star.style.top = `${y}px`;
+
+                // Random twinkling speed
+                let duration = (Math.random() * 2 + 1).toFixed(1);
+                star.style.animationDuration = `${duration}s`;
+
+                // Click event
+                star.addEventListener("click", (event) => {
+                    showMessage(event.clientX, event.clientY);
+                });
+
+                document.body.appendChild(star);
+            }
+        }
+
+        function showMessage(x, y) {
+            let messageBox = document.getElementById("messageBox");
+            let randomMessage = messages[Math.floor(Math.random() * messages.length)];
+
+            messageBox.textContent = randomMessage;
+            messageBox.style.left = `${x}px`;
+            messageBox.style.top = `${y}px`;
+            messageBox.style.display = "block";
+            messageBox.style.opacity = "1";
+
+            setTimeout(() => {
+                messageBox.style.opacity = "0";
+                setTimeout(() => {
+                    messageBox.style.display = "none";
+                }, 500);
+            }, 3000);
+        }
+
+        createStars();
+
+	const musicButton = document.getElementById("musicButton");
+	const backgroundMusic = document.getElementById("backgroundMusic");
+	
+	let isMusicPlaying = false;
+
+	musicButton.addEventListener("click", function() {
+	    if (isMusicPlaying) {
+		backgroundMusic.pause();
+		isMusicPlaying = false;
+	    } else {
+		backgroundMusic.play();
+		isMusicPlaying = true;
+	    }
+	});
+
+    </script>
+
+</body>
+</html>
